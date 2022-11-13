@@ -7,11 +7,12 @@ internal class Program
         Console.SetWindowSize(40, 30);
         Console.SetBufferSize(40, 30);
 
-        for (int i = 0; i <= 3; i++)
-        {
-            Square square = new Square(1, i, '*');
-            square.Draw();
-        }
+        Stick stick = new Stick(4, 4, '*');
+        stick.Draw();
+
+        Square square = new Square(7, 1, '*');
+        square.Draw();
+        
 
         Console.ReadLine();
     }
