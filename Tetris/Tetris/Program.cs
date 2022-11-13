@@ -7,11 +7,12 @@ internal class Program
         Console.SetWindowSize(40, 30);
         Console.SetBufferSize(40, 30);
 
-        Point p1 = new Point();
-        p1.x = 3;
-        p1.y = 4;
-        p1.c = '*';
+        Point p1 = new Point(3, 4, '#');
         p1.Draw();
+
+        Point p2 = new Point(1, 3, '*');
+        p2.Draw();
+
         Console.ReadLine();
     }
 }

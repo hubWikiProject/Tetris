@@ -8,13 +8,19 @@ namespace Tetris
 {
     class Point
     {
-        public int x, y;
-        public char c;
+        int x, y;
+        char symbol;
+        public Point(int x, int y, char sym)
+        {
+            this.x = x;
+            this.y = y;
+            this.symbol = sym;
+        }
 
         public void Draw()
         {
-            Console.SetCursorPosition(this.x, this.y);
-            Console.Write(this.c);
+            Console.SetCursorPosition(x, y);
+            Console.Write(symbol);
         }
     }
 }
