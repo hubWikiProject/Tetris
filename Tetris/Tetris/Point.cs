@@ -8,8 +8,8 @@ namespace Tetris
 {
     class Point
     {
-        int x, y;
-        char symbol;
+        private int x, y;
+        private char symbol;
         public Point(int x, int y, char sym)
         {
             this.x = x;
