@@ -8,7 +8,7 @@ namespace Tetris
 {
     class Point
     {
-        private int x, y;
+        public int x, y;
         private char symbol;
         public Point(int x, int y, char sym)
         {

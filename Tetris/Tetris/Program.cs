@@ -17,7 +17,12 @@ internal class Program
             figure.Move(Direction.LEFT);
         }*/
 
-        Square square = new Square(2, 4, '*');
+        Figure square = new Stick(25, 4, '*');
+        square.Draw();
+
+        Thread.Sleep(500);
+        square.Hide();
+        square.Rotate();
         square.Draw();
 
         Thread.Sleep(500);
@@ -38,6 +43,11 @@ internal class Program
         Thread.Sleep(500);
         square.Hide();
         square.Move(Direction.DOWN);
+        square.Draw();
+
+        Thread.Sleep(500);
+        square.Hide();
+        square.Rotate();
         square.Draw();
 
         Console.ReadLine();
