@@ -17,39 +17,29 @@ internal class Program
             figure.Move(Direction.LEFT);
         }*/
 
-        Figure square = new Stick(25, 4, '*');
-        square.Draw();
+        FigureGenerator generate = new FigureGenerator(10, 0, '*');
+        Figure fig;
 
-        Thread.Sleep(500);
-        square.Hide();
-        square.Rotate();
-        square.Draw();
-
-        Thread.Sleep(500);
-        square.Hide();
-        square.Move(Direction.LEFT);
-        square.Draw();
-
-        Thread.Sleep(500);
-        square.Hide();
-        square.Move(Direction.DOWN);
-        square.Draw();
-
-        Thread.Sleep(500);
-        square.Hide();
-        square.Move(Direction.RIGHT);
-        square.Draw();
-
-        Thread.Sleep(500);
-        square.Hide();
-        square.Move(Direction.DOWN);
-        square.Draw();
-
-        Thread.Sleep(500);
-        square.Hide();
-        square.Rotate();
-        square.Draw();
+        while (true)
+        {
+            FigureFall(out fig, generate);
+            fig.Draw();
+        }
 
         Console.ReadLine();
+    }
+
+    static void FigureFall(out Figure figure, FigureGenerator generator)
+    {
+        figure = generator.GetNewFigure();
+        figure.Draw();
+
+        for (int i = 0; i < 15; i++)
+        {
+            figure.Hide();
+            figure.Move(Direction.DOWN);
+            figure.Draw();
+            Thread.Sleep(100);
+        }
     }
 }
