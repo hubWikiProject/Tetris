@@ -8,7 +8,9 @@ namespace Tetris
 {
     abstract class Figure
     {
-        protected Point[] points = new Point[4];
+        private const int LENGHT = 4;
+
+        protected Point[] points = new Point[LENGHT];
         public void Draw()
         {
             foreach (Point point in points)
@@ -23,56 +25,48 @@ namespace Tetris
                 point.Hide();
             }
         }
-
-        public void Move(Direction direction)
+        public void TryMove(Direction direction)
         {
-            if(IsScreenBorder(direction))
-                return;
-
             Hide();
-            foreach (Point point in points)
-            {
-                point.Move(direction);
-            }
+            var clone = Clone();
+            Move(clone, direction);
+
+            if (VerifyPosition(clone))
+                points = clone;
+
             Draw();
         }
 
-        private bool IsScreenBorder(Direction direction)
+        protected bool VerifyPosition(Point[] pList)
         {
-            switch (direction)
+            foreach (var p in pList)
             {
-                case Direction.LEFT:
-                    if (points[0].x - 1 == 0
-                        || points[1].x - 1 == 0
-                        || points[2].x - 1 == 0
-                        || points[3].x - 1 == 0)
-                        return true;
-                    break;
-                case Direction.RIGHT:
-                    if (points[0].x + 1 == 40
-                        || points[1].x + 1 == 40
-                        || points[2].x + 1 == 40
-                        || points[3].x + 1 == 40)
-                        return true;
-                    break;
-                case Direction.DOWN:
-                    if (points[0].y + 1 == 30
-                        || points[1].y + 1 == 30
-                        || points[2].y + 1 == 30
-                        || points[3].y + 1 == 30)
-                        return true;
-                    break;
-                default:
-                    break;
+                if (p.X < 0 || p.Y < 0 || p.X >= Fields.Height || p.Y >= Fields.Width)
+                    return false;
             }
-            
-            foreach(Point point in points)
-            {
-                
-            }
-            return false;
+
+            return true;
         }
 
-        public abstract void Rotate();
+        protected Point[] Clone()
+        {
+            Point[] newPoints = new Point[LENGHT];
+            for (int i = 0; i < LENGHT; i++)
+            {
+                newPoints[i] = new Point(points[i]);
+            }
+
+            return newPoints;
+        }
+
+        public void Move(Point[] pList, Direction direction)
+        {
+            foreach (var p in pList)
+            {
+                p.Move(direction);
+            }
+        }
+        public abstract void Rotate(Point[] pList);
+        public abstract void TryRotate();
     }
 }

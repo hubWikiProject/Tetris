@@ -15,10 +15,11 @@ class FigureGenerator
     public Figure GetNewFigure()
     {
         Random random = new Random();
-        if(random.Next(0, 2) == 0)
+        if (random.Next(0, 2) == 0)
         {
             return new Square(_x, _y, _symbol);
-        } else
+        }
+        else
         {
             return new Stick(_x, _y, _symbol);
         }
