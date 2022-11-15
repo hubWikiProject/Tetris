@@ -18,28 +18,35 @@ internal class Program
         }*/
 
         FigureGenerator generate = new FigureGenerator(10, 0, '*');
-        Figure fig;
+        Figure figure = generate.GetNewFigure();
 
         while (true)
         {
-            FigureFall(out fig, generate);
-            fig.Draw();
+            if (Console.KeyAvailable)
+            {
+                ConsoleKeyInfo key =  Console.ReadKey();
+                HandleKey(figure, key);
+            }
         }
 
         Console.ReadLine();
     }
 
-    static void FigureFall(out Figure figure, FigureGenerator generator)
+    private static void HandleKey(Figure figure, ConsoleKeyInfo key)
     {
-        figure = generator.GetNewFigure();
-        figure.Draw();
-
-        for (int i = 0; i < 15; i++)
+        switch (key.Key)
         {
-            figure.Hide();
-            figure.Move(Direction.DOWN);
-            figure.Draw();
-            Thread.Sleep(100);
+            case ConsoleKey.RightArrow:
+                figure.Move(Direction.RIGHT);
+                break;
+            case ConsoleKey.LeftArrow:
+                figure.Move(Direction.LEFT);
+                break;
+            case ConsoleKey.DownArrow:
+                figure.Move(Direction.DOWN);
+                break;
+            default:
+                break;
         }
     }
 }
