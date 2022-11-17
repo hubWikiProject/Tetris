@@ -10,42 +10,69 @@ namespace Tetris
     {
         private const int LENGHT = 4;
 
-        protected Point[] points = new Point[LENGHT];
+        public Point[] Points = new Point[LENGHT];
         public void Draw()
         {
-            foreach (Point point in points)
+            foreach (Point point in Points)
             {
                 point.Draw();
             }
         }
         public void Hide()
         {
-            foreach (Point point in points)
+            foreach (Point point in Points)
             {
                 point.Hide();
             }
         }
-        public void TryMove(Direction direction)
+        public Result TryMove(Direction direction)
         {
             Hide();
             var clone = Clone();
             Move(clone, direction);
 
-            if (VerifyPosition(clone))
-                points = clone;
+            var result = VerifyPosition(clone);
+            if (result == Result.SUCCESS)
+                Points = clone;
 
             Draw();
+            return result;
+        }
+        public Result TryRotate()
+        {
+            Hide();
+            var clone = Clone();
+            Rotate(clone);
+
+            var result = VerifyPosition(clone);
+            if (result == Result.SUCCESS)
+                Points = clone;
+
+            Draw();
+            return result;
         }
 
-        protected bool VerifyPosition(Point[] pList)
+        protected Result VerifyPosition(Point[] pList)
         {
             foreach (var p in pList)
             {
-                if (p.X < 0 || p.Y < 0 || p.X >= Fields.Height || p.Y >= Fields.Width)
-                    return false;
-            }
+                //нижняя граница
+                if (p.Y >= Fields.Height)
+                {
+                    return Result.DOWN_BORDER_STRIKE;
+                }
 
-            return true;
+                if (p.X < 0 || p.Y < 0 || p.X >= Fields.Width)
+                {
+                    return Result.BORDER_STRIKE;
+                }
+
+                if (Fields.CheckStrike(p))
+                {
+                    return Result.HEAP_STRIKE;
+                }
+            }
+            return Result.SUCCESS; ;
         }
 
         protected Point[] Clone()
@@ -53,7 +80,7 @@ namespace Tetris
             Point[] newPoints = new Point[LENGHT];
             for (int i = 0; i < LENGHT; i++)
             {
-                newPoints[i] = new Point(points[i]);
+                newPoints[i] = new Point(Points[i]);
             }
 
             return newPoints;
@@ -67,6 +94,5 @@ namespace Tetris
             }
         }
         public abstract void Rotate(Point[] pList);
-        public abstract void TryRotate();
     }
 }

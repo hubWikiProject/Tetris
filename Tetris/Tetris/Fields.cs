@@ -19,8 +19,8 @@ namespace Tetris
             set
             {
                 _width = value;
-                Console.SetWindowSize(Fields.Height, Fields.Width);
-                Console.SetBufferSize(Fields.Height, Fields.Width);
+                Console.SetWindowSize(Fields.Width, Fields.Height);
+                Console.SetBufferSize(Fields.Width, Fields.Height);
             }
         }
 
@@ -33,8 +33,31 @@ namespace Tetris
             set
             {
                 _height = value;
-                Console.SetWindowSize(Fields.Height, Fields.Width);
-                Console.SetBufferSize(Fields.Height, Fields.Width);
+                Console.SetWindowSize(Fields.Width, Fields.Height);
+                Console.SetBufferSize(Fields.Width, Fields.Height);
+            }
+        }
+
+        private static bool[][] _heap;
+
+        static Fields()
+        {
+            _heap = new bool[Height][];
+            for (int i = 0; i < Height; i++)
+            {
+                _heap[i] = new bool[Width];
+            }
+        }
+
+        public static bool CheckStrike(Point p)
+        {
+            return _heap[p.Y][p.X];
+        }
+        public static void AddFigure(Figure figure)
+        {
+            foreach (var p in figure.Points)
+            {
+                _heap[p.Y][p.X] = true;
             }
         }
     }

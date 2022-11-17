@@ -1,39 +1,56 @@
 ﻿using Tetris;
 
-Fields.Width = 30;
-Fields.Height = 40;
-
-FigureGenerator generate = new FigureGenerator(10, 0, '*');
-Figure figure = generate.GetNewFigure();
-
-while (true)
+public class Program
 {
-    if (Console.KeyAvailable)
+    static FigureGenerator generator;
+    private static void Main(string[] args)
     {
-        ConsoleKeyInfo key = Console.ReadKey();
-        HandleKey(figure, key);
+        Fields.Width = 30;
+        Fields.Height = 40;
+
+        generator = new FigureGenerator(10, 0, '*');
+        Figure figure = generator.GetNewFigure();
+
+        while (true)
+        {
+            if (Console.KeyAvailable)
+            {
+                ConsoleKeyInfo key = Console.ReadKey();
+                var result = HandleKey(figure, key);
+                ProcessResult(result, ref figure);
+            }
+        }
+
+        Console.ReadLine();
+
+        static Result HandleKey(Figure figure, ConsoleKeyInfo key)
+        {
+            switch (key.Key)
+            {
+                case ConsoleKey.RightArrow:
+                    return figure.TryMove(Direction.RIGHT);
+                case ConsoleKey.LeftArrow:
+                    return figure.TryMove(Direction.LEFT);
+                case ConsoleKey.DownArrow:
+                    return figure.TryMove(Direction.DOWN);
+                case ConsoleKey.Spacebar:
+                    return figure.TryRotate();
+            }
+            return Result.SUCCESS;
+        }
     }
-}
 
-Console.ReadLine();
-
-static void HandleKey(Figure figure, ConsoleKeyInfo key)
-{
-    switch (key.Key)
+    private static bool ProcessResult(Result result, ref Figure figure)
     {
-        case ConsoleKey.RightArrow:
-            figure.TryMove(Direction.RIGHT);
-            break;
-        case ConsoleKey.LeftArrow:
-            figure.TryMove(Direction.LEFT);
-            break;
-        case ConsoleKey.DownArrow:
-            figure.TryMove(Direction.DOWN);
-            break;
-        case ConsoleKey.Spacebar:
-            figure.TryRotate();
-            break;
-        default:
-            break;
+        if (result == Result.HEAP_STRIKE || result == Result.DOWN_BORDER_STRIKE)
+        {
+            Fields.AddFigure(figure);
+            figure = generator.GetNewFigure();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
