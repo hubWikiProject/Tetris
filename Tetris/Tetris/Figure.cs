@@ -86,7 +86,7 @@ namespace Tetris
             return newPoints;
         }
 
-        public void Move(Point[] pList, Direction direction)
+        private void Move(Point[] pList, Direction direction)
         {
             foreach (var p in pList)
             {
