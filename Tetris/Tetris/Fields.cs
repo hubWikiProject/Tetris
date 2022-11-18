@@ -54,12 +54,18 @@ namespace Tetris
         {
             return _heap[p.Y][p.X];
         }
-        public static void AddFigure(Figure figure)
+
+        public static Result AddFigure(Figure figure)
         {
             foreach (var p in figure.Points)
             {
+                if (p.Y == 0)
+                {
+                    return Result.GAME_OVER;
+                }
                 _heap[p.Y][p.X] = true;
             }
+            return Result.SUCCESS;
         }
 
         public static void TryDeleteLines()

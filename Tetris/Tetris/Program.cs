@@ -10,6 +10,8 @@ public class Program
     static Figure figure;
     static FigureGenerator generator;
 
+    static private bool gameOver = false;
+
     static void Main(string[] args)
     {
 
@@ -20,8 +22,7 @@ public class Program
         figure = generator.GetNewFigure();
 
         SetTimer();
-
-        while (true)
+        while (!gameOver)
         {
             if (Console.KeyAvailable)
             {
@@ -33,16 +34,21 @@ public class Program
                 Monitor.Exit(_lockObject);
             }
         }
+
+        Console.ReadKey();
     }
 
     private static void SetTimer()
     {
-        // Create a timer with a two second interval.
-        aTimer = new System.Timers.Timer(TIMER_INTERVAL);
-        // Hook up the Elapsed event for the timer. 
-        aTimer.Elapsed += OnTimedEvent;
-        aTimer.AutoReset = true;
-        aTimer.Enabled = true;
+        if (!gameOver)
+        {
+            // Create a timer with a two second interval.
+            aTimer = new System.Timers.Timer(TIMER_INTERVAL);
+            // Hook up the Elapsed event for the timer. 
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
     }
 
     private static void OnTimedEvent(Object source, ElapsedEventArgs e)
@@ -59,13 +65,30 @@ public class Program
         {
             Fields.AddFigure(figure);
             Fields.TryDeleteLines();
-            figure = generator.GetNewFigure();
-            return true;
+
+            if (figure.IsOnTop())
+            {
+                WriteGameOver();
+                aTimer.Elapsed -= OnTimedEvent;
+                gameOver = true;
+                return true;
+            }
+            else
+            {
+                figure = generator.GetNewFigure();
+                return false;
+            }
         }
         else
         {
             return false;
         }
+    }
+
+    private static void WriteGameOver()
+    {
+        Console.SetCursorPosition(Fields.Width / 2 - 5, Fields.Height / 2);
+        Console.Write("GAME OVER!");
     }
 
     private static Result HandleKey(Figure figure, ConsoleKeyInfo key)

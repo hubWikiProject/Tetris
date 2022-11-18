@@ -94,5 +94,10 @@ namespace Tetris
             }
         }
         public abstract void Rotate(Point[] pList);
+
+        internal bool IsOnTop()
+        {
+            return Points[0].Y == 0;
+        }
     }
 }
