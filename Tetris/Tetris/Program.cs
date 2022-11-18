@@ -5,10 +5,10 @@ public class Program
     static FigureGenerator generator;
     private static void Main(string[] args)
     {
-        Fields.Width = 30;
-        Fields.Height = 40;
+        Console.SetWindowSize(Fields.Width, Fields.Height);
+        Console.SetBufferSize(Fields.Width, Fields.Height);
 
-        generator = new FigureGenerator(10, 0, '*');
+        generator = new FigureGenerator(Fields.Width / 2, 0, Drawer.DEFAULT_SYMBOL);
         Figure figure = generator.GetNewFigure();
 
         while (true)
@@ -45,6 +45,7 @@ public class Program
         if (result == Result.HEAP_STRIKE || result == Result.DOWN_BORDER_STRIKE)
         {
             Fields.AddFigure(figure);
+            Fields.TryDeleteLines();
             figure = generator.GetNewFigure();
             return true;
         }
