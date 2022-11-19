@@ -1,4 +1,5 @@
-﻿using Tetris;
+﻿using System;
+using TetrisGui;
 
 class FigureGenerator
 {

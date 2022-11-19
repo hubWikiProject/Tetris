@@ -1,39 +1,41 @@
-﻿using System.Timers;
-using Tetris;
+﻿using System.Threading;
+using System;
+using System.Timers;
+using TetrisGui;
+using Microsoft.SmallBasic.Library;
 
 public class Program
 {
     const int TIMER_INTERVAL = 500;
-    static System.Timers.Timer? aTimer;
+    static System.Timers.Timer aTimer;
+
     static private Object _lockObject = new object();
 
-    static Figure? figure;
-    static FigureGenerator generator;
+    static Figure figure;
+    static FigureGenerator factory = new FigureGenerator(Fields.Width / 2, 0);
 
     static private bool gameOver = false;
 
     static void Main(string[] args)
     {
         DrawerProvider.Drawer.InitField();
-        
-        generator = new FigureGenerator(Fields.Width / 2, 0);
-        figure = generator.GetNewFigure();
 
         SetTimer();
-        while (!gameOver)
-        {
-            if (Console.KeyAvailable)
-            {
-                ConsoleKeyInfo key = Console.ReadKey();
+        figure = factory.GetNewFigure();
+        figure.Draw();
+        GraphicsWindow.KeyDown += GraphicsWindow_KeyDown;
+    }
 
-                Monitor.Enter(_lockObject);
-                var result = HandleKey(figure, key);
-                ProcessResult(result, ref figure);
-                Monitor.Exit(_lockObject);
-            }
-        }
+    private static void GraphicsWindow_KeyDown()
+    {
+        Monitor.Enter(_lockObject);
 
-        Console.ReadKey();
+        var result = HandleKey(figure, GraphicsWindow.LastKey);
+
+        if (GraphicsWindow.LastKey == "Down")
+            gameOver = ProcessResult(result, ref figure);
+
+        Monitor.Exit(_lockObject);
     }
 
     private static void SetTimer()
@@ -53,7 +55,9 @@ public class Program
     {
         Monitor.Enter(_lockObject);
         var result = figure.TryMove(Direction.DOWN);
-        ProcessResult(result, ref figure);
+        gameOver = ProcessResult(result, ref figure);
+        if (gameOver)
+            aTimer.Stop();
         Monitor.Exit(_lockObject);
     }
 
@@ -67,13 +71,11 @@ public class Program
             if (figure.IsOnTop())
             {
                 DrawerProvider.Drawer.WriteGameOver();
-                aTimer.Elapsed -= OnTimedEvent;
-                gameOver = true;
                 return true;
             }
             else
             {
-                figure = generator.GetNewFigure();
+                figure = factory.GetNewFigure();
                 return false;
             }
         }
@@ -94,6 +96,23 @@ public class Program
             case ConsoleKey.DownArrow:
                 return figure.TryMove(Direction.DOWN);
             case ConsoleKey.Spacebar:
+                return figure.TryRotate();
+        }
+        return Result.SUCCESS;
+    }
+
+    private static Result HandleKey(Figure figure, Primitive key)
+    {
+        string lastKey = (string)key;
+        switch (lastKey)
+        {
+            case "Right":
+                return figure.TryMove(Direction.RIGHT);
+            case "Left":
+                return figure.TryMove(Direction.LEFT);
+            case "Down":
+                return figure.TryMove(Direction.DOWN);
+            case "Space":
                 return figure.TryRotate();
         }
         return Result.SUCCESS;

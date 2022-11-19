@@ -1,4 +1,4 @@
-﻿namespace Tetris
+﻿namespace TetrisGui
 {
     class Point
     {

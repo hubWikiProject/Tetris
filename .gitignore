@@ -2,4 +2,5 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/Tetris/TetrisGui/bin/Debug
+/Tetris/TetrisGui/obj/Debug
+/Tetris/TetrisGui/Properties
