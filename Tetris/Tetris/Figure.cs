@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tetris
+﻿namespace Tetris
 {
     abstract class Figure
     {
@@ -28,33 +22,43 @@ namespace Tetris
         public Result TryMove(Direction direction)
         {
             Hide();
-            var clone = Clone();
-            Move(clone, direction);
+            Move(direction);
 
-            var result = VerifyPosition(clone);
-            if (result == Result.SUCCESS)
-                Points = clone;
-
-            Draw();
-            return result;
-        }
-        public Result TryRotate()
-        {
-            Hide();
-            var clone = Clone();
-            Rotate(clone);
-
-            var result = VerifyPosition(clone);
-            if (result == Result.SUCCESS)
-                Points = clone;
+            var result = VerifyPosition();
+            if (result != Result.SUCCESS)
+                Move(Reverce(direction));
 
             Draw();
+
             return result;
         }
 
-        protected Result VerifyPosition(Point[] pList)
+        public abstract Result TryRotate();
+
+        private static Direction Reverce(Direction direction)
         {
-            foreach (var p in pList)
+            switch (direction)
+            {
+                case Direction.LEFT:
+                    direction = Direction.RIGHT;
+                    break;
+                case Direction.RIGHT:
+                    direction = Direction.LEFT;
+                    break;
+                case Direction.UP:
+                    direction = Direction.DOWN;
+                    break;
+                case Direction.DOWN:
+                    direction = Direction.UP;
+                    break;
+            }
+
+            return direction;
+        }
+
+        protected Result VerifyPosition()
+        {
+            foreach (var p in Points)
             {
                 //нижняя граница
                 if (p.Y >= Fields.Height)
@@ -75,25 +79,14 @@ namespace Tetris
             return Result.SUCCESS; ;
         }
 
-        protected Point[] Clone()
+        private void Move(Direction direction)
         {
-            Point[] newPoints = new Point[LENGHT];
-            for (int i = 0; i < LENGHT; i++)
-            {
-                newPoints[i] = new Point(Points[i]);
-            }
-
-            return newPoints;
-        }
-
-        private void Move(Point[] pList, Direction direction)
-        {
-            foreach (var p in pList)
+            foreach (var p in Points)
             {
                 p.Move(direction);
             }
         }
-        public abstract void Rotate(Point[] pList);
+        public abstract void Rotate();
 
         internal bool IsOnTop()
         {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tetris
+﻿namespace Tetris
 {
     class Point
     {
@@ -38,7 +32,8 @@ namespace Tetris
                 case Direction.DOWN:
                     Y += 1;
                     break;
-                default:
+                case Direction.UP:
+                    Y -= 1;
                     break;
             }
         }

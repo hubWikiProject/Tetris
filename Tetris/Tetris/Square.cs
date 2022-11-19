@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tetris
+﻿namespace Tetris
 {
     internal class Square : Figure
     {
@@ -17,9 +11,14 @@ namespace Tetris
 
             Draw();
         }
-        public override void Rotate(Point[] pList)
+        public override void Rotate()
         {
 
+        }
+
+        public override Result TryRotate()
+        {
+            return Result.SUCCESS;
         }
     }
 }

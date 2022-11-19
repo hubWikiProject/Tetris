@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Tetris
+﻿namespace Tetris
 {
     internal class Stick : Figure
     {
@@ -18,47 +12,46 @@ namespace Tetris
             Draw();
         }
 
-        public override void Rotate(Point[] pList)
+        public override void Rotate()
         {
-            if (pList[0].X == pList[1].X)
+            if (Points[0].X == Points[1].X)
             {
-                RotateHorisontal(pList);
+                RotateHorisontal();
             }
             else
             {
-                RotateVertical(pList);
+                RotateVertical();
             }
         }
 
-        public Result TryRotate()
+        public override Result TryRotate()
         {
             Hide();
-            var clone = Clone();
-            Rotate(clone);
+            Rotate();
 
-            var result = VerifyPosition(clone);
-            if (result == Result.SUCCESS)
-                Points = clone;
+            var result = VerifyPosition();
+            if (result != Result.SUCCESS)
+                Rotate();
 
             Draw();
             return result;
         }
 
-        private void RotateVertical(Point[] pList)
+        private void RotateVertical()
         {
             for (int i = 0; i < Points.Length; i++)
             {
-                pList[i].X = pList[0].X;
-                pList[i].Y = pList[0].Y + i;
+                Points[i].X = Points[0].X;
+                Points[i].Y = Points[0].Y + i;
             }
         }
 
-        private void RotateHorisontal(Point[] pList)
+        private void RotateHorisontal()
         {
             for (int i = 0; i < Points.Length; i++)
             {
-                pList[i].Y = pList[0].Y;
-                pList[i].X = pList[0].X + i;
+                Points[i].Y = Points[0].Y;
+                Points[i].X = Points[0].X + i;
             }
         }
     }

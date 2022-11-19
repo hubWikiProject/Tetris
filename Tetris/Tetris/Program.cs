@@ -1,5 +1,5 @@
-﻿using Tetris;
-using System.Timers;
+﻿using System.Timers;
+using Tetris;
 
 public class Program
 {
